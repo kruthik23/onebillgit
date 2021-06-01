@@ -13,7 +13,7 @@ public class OBBank {
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3307/OneBillStudent?user=onebill & password= onebill");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/OneBillStudent?user=root & password= Onebill@2020");
 			String query = "create database onebillbankdb";
 			stmt = con.createStatement();
 			int count = stmt.executeUpdate(query);
