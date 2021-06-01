@@ -1,0 +1,68 @@
+mysql> select * from item;
+    -> //
++--------+----------+------+-------+-----------+
+| itemid | itemdesc | qoh  | price | category  |
++--------+----------+------+-------+-----------+
+|      1 | Perfume  |  100 |   100 | Cosmetics |
+|      2 | Marie    |  100 |    10 | Snacks    |
++--------+----------+------+-------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select * from sales;
+    -> //
++-----+--------+---------+-------+-------+
+| sid | itemid | qtysold | price | total |
++-----+--------+---------+-------+-------+
+| 101 |      2 |      10 |     0 |     0 |
+| 102 |      2 |     100 |    23 |  2300 |
+| 103 |      2 |     200 |    23 |  4600 |
++-----+--------+---------+-------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select itemdesc as Description_of_item,price,qoh as quantity_on_hand from item full outer join sales on item.itemid=sales.itemid order by item.price;
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'outer join sales on item.itemid=sales.itemid order by item.price' at line 1
+mysql> ^C
+mysql> 
+mysql> select * from item left join sales on item.itemid=sales.itemid union select * from item right join sales on item.itemid =sales.itemid;
+    -> //
++--------+----------+------+-------+-----------+------+--------+---------+-------+-------+
+| itemid | itemdesc | qoh  | price | category  | sid  | itemid | qtysold | price | total |
++--------+----------+------+-------+-----------+------+--------+---------+-------+-------+
+|      2 | Marie    |  100 |    10 | Snacks    |  101 |      2 |      10 |     0 |     0 |
+|      2 | Marie    |  100 |    10 | Snacks    |  102 |      2 |     100 |    23 |  2300 |
+|      2 | Marie    |  100 |    10 | Snacks    |  103 |      2 |     200 |    23 |  4600 |
+|      1 | Perfume  |  100 |   100 | Cosmetics | NULL |   NULL |    NULL |  NULL |  NULL |
++--------+----------+------+-------+-----------+------+--------+---------+-------+-------+
+4 rows in set (0.01 sec)
+
+
+mysql> select * from item left join sales on item.itemid=sales.itemid union select * from item right join sales on item.itemid =sales.itemid;
+   
++--------+----------+------+-------+-----------+------+--------+---------+-------+-------+
+| itemid | itemdesc | qoh  | price | category  | sid  | itemid | qtysold | price | total |
++--------+----------+------+-------+-----------+------+--------+---------+-------+-------+
+|      2 | Marie    |  100 |    10 | Snacks    |  101 |      2 |      10 |     0 |     0 |
+|      2 | Marie    |  100 |    10 | Snacks    |  102 |      2 |     100 |    23 |  2300 |
+|      2 | Marie    |  100 |    10 | Snacks    |  103 |      2 |     200 |    23 |  4600 |
+|      1 | Perfume  |  100 |   100 | Cosmetics | NULL |   NULL |    NULL |  NULL |  NULL |
++--------+----------+------+-------+-----------+------+--------+---------+-------+-------+
+4 rows in set (0.01 sec)
+
+
+mysql> select * from item left join sales on item.itemid=sales.itemid union select *  from sales right join item on item.itemid=sales.itemid;
+  
++--------+----------+------+-------+-----------+------+---------+---------+-------+-----------+
+| itemid | itemdesc | qoh  | price | category  | sid  | itemid  | qtysold | price | total     |
++--------+----------+------+-------+-----------+------+---------+---------+-------+-----------+
+|      2 | Marie    |  100 |    10 | Snacks    |  101 | 2       |      10 |     0 | 0         |
+|      2 | Marie    |  100 |    10 | Snacks    |  102 | 2       |     100 |    23 | 2300      |
+|      2 | Marie    |  100 |    10 | Snacks    |  103 | 2       |     200 |    23 | 4600      |
+|      1 | Perfume  |  100 |   100 | Cosmetics | NULL | NULL    |    NULL |  NULL | NULL      |
+|    101 | 2        |   10 |     0 | 0         |    2 | Marie   |     100 |    10 | Snacks    |
+|    102 | 2        |  100 |    23 | 2300      |    2 | Marie   |     100 |    10 | Snacks    |
+|    103 | 2        |  200 |    23 | 4600      |    2 | Marie   |     100 |    10 | Snacks    |
+|   NULL | NULL     | NULL |  NULL | NULL      |    1 | Perfume |     100 |   100 | Cosmetics |
++--------+----------+------+-------+-----------+------+---------+---------+-------+-----------+
+8 rows in set (0.00 sec)
+

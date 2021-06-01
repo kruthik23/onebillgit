@@ -1,0 +1,21 @@
+
+
+mysql> select * from office;
++------------+--------------+--------+----------+----------+-------+---------+------------+--------------------------+
+| officeCode | city         | phone  | address1 | address2 | state | country | postalcode | status                   |
++------------+--------------+--------+----------+----------+-------+---------+------------+--------------------------+
+|          1 | San Francico | NULL   | sdsd     | sdsd     | CA    | USA     |      98040 | onboarding...            |
+|          2 | San Diego    | NULL   | sdsd     | sdsd     | CA    | USA     |      98041 | temperory closing....    |
+|          3 | Middletown   | 420023 | sdsd     | sdsd     | NY    | UK      |       8041 | opening all weekends.... |
++------------+--------------+--------+----------+----------+-------+---------+------------+--------------------------+
+3 rows in set (0.00 sec)
+
+
+mysql> select count(officecode) from office group by country having count(officecode)>1;
++-------------------+
+| count(officecode) |
++-------------------+
+|                 2 |
++-------------------+
+1 row in set (0.08 sec)
+

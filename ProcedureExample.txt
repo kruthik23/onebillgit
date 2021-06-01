@@ -1,0 +1,168 @@
+
+
+mysql> select * from office;
++------------+--------------+--------+----------+----------+-------+---------+------------+--------------------------+
+| officeCode | city         | phone  | address1 | address2 | state | country | postalcode | status                   |
++------------+--------------+--------+----------+----------+-------+---------+------------+--------------------------+
+|          1 | San Francico | NULL   | sdsd     | sdsd     | CA    | USA     |      98040 | onboarding...            |
+|          2 | San Diego    | NULL   | sdsd     | sdsd     | CA    | USA     |      98041 | temperory closing....    |
+|          3 | Middletown   | 420023 | sdsd     | sdsd     | NY    | UK      |       8041 | opening all weekends.... |
++------------+--------------+--------+----------+----------+-------+---------+------------+--------------------------+
+3 rows in set (0.00 sec)
+
+mysql> delimiter //
+mysql> create procedure todisplayStatus(
+    -> IN cityName varchar(50))
+    -> begin
+    -> select status from office where city=cityName;
+    -> end //
+Query OK, 0 rows affected (0.00 sec)
+mysql> delimiter ;
+
+mysql> call todisplayStatus('San Francico');
+     
++---------------+
+| status        |
++---------------+
+| onboarding... |
++---------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> select * from orders;
+  
++------+--------+------+
+| o_id | amount | c_id |
++------+--------+------+
+|  601 |  10000 |    1 |
+|  602 |  20000 |    4 |
+|  603 |  15000 |    2 |
++------+--------+------+
+3 rows in set (0.00 sec)
+
+
+mysql> delimiter //
+mysql> create procedure todisplaytotalamount(
+    -> IN order_id int(10),
+    -> OUT total INT)
+    -> begin
+    -> select sum(amount) into total from orders where o_id=order_id;
+    -> end//
+Query OK, 0 rows affected (0.00 sec)
+mysql> delimiter ;
+
+mysql> select * from orders;
+    -> //
++------+--------+------+----------+
+| o_id | amount | c_id | status   |
++------+--------+------+----------+
+|  601 |  10000 |    1 | pending  |
+|  602 |  20000 |    4 | pending  |
+|  603 |  15000 |    2 | shipping |
++------+--------+------+----------+
+3 rows in set (0.00 sec)
+
+mysql> delimiter //
+mysql> create procedure todisplayorderstatusinfo(OUT total INT)
+    -> begin
+    -> select sum(amount) into total from orders where status="pending";
+    -> end//
+Query OK, 0 rows affected (0.00 sec)
+mysql> delimiter ;
+
+mysql> call todisplayorderstatusinfo(@total);
+
++--------------+
+| total_amount |
++--------------+
+|        30000 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> select * from customer;
+   
++------+---------------+-------------+
+| c_id | customer_name | designation |
++------+---------------+-------------+
+|    1 | Rohan         | Engineer    |
+|    2 | Raj           | Tester      |
+|    3 | Rohit         | Analyst     |
+|    4 | Nandhan       | HR          |
++------+---------------+-------------+
+4 rows in set (0.00 sec)
+
+
+mysql> select * from item;
+
++--------+----------+------+-------+-----------+
+| itemid | itemdesc | qoh  | price | category  |
++--------+----------+------+-------+-----------+
+|      1 | Perfume  |  100 |   100 | Cosmetics |
+|      2 | Marie    |  100 |    10 | Snacks    |
++--------+----------+------+-------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> delimiter //
+mysql> create procedure toreducequantity(IN id int,INOUT quantity int)
+    -> begin
+    -> set quantity = quantity-id;
+    -> end//
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set @id=10;
+    -> call toreducequantity(@id,100);
+    -> //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set @id=10;
+    -> call toreducequantity(@id,100);
+    -> select $id;
+    -> //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from item;
+
++--------+----------+------+-------+-----------+
+| itemid | itemdesc | qoh  | price | category  |
++--------+----------+------+-------+-----------+
+|      1 | Perfume  |  100 |   100 | Cosmetics |
+|      2 | Marie    |  100 |    10 | Snacks    |
++--------+----------+------+-------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> delimiter //
+mysql> create procedure purchaseitem(IN quantity int,INOUT no_of_items int)
+    -> begin
+    -> set no_of_item = no_of_items+quantity;
+    -> end//
+
+
+mysql> delimiter //
+mysql> create procedure reducequantity(
+    -> INOUT quantity int,
+    -> IN noitem int)
+    -> begin
+    -> set quantity = quantity-noitem;
+    -> end//
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set @quantity =100;
+    -> call reducequantity(@quantity,5);
+    -> call reducequantity(@quantity,3);
+    -> select @quantity;
+    -> //
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
++-----------+
+| @quantity |
++-----------+
+|        92 |
++-----------+
+1 row in set (0.00 sec)
+
