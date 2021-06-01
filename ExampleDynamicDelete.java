@@ -13,7 +13,7 @@ public class ExampleDynamicDelete {
 			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 
 			con = DriverManager
-					.getConnection("jdbc:mysql://localhost:3307/OneBillStudent?user=onebill&password=onebill");
+					.getConnection("jdbc:mysql://localhost:3307/OneBillStudent?user=root&password=Onebill@2020");
 
 			String query = "delete from Student where sid=?";
 			pstmt = con.prepareStatement(query);
